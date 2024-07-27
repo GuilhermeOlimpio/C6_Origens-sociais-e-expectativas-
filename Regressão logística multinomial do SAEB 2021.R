@@ -137,9 +137,10 @@ dados_reg$categoria_administrativa <- dplyr::recode(dados_reg$categoria_administ
 
 dados_reg <- mutate(.data = dados_reg,
                      faixasNSE = case_when(
-                       NSE < 4.5 ~ "Baixo",
-                       NSE >= 4.5 & NSE < 5.5 ~ "Regular",
-                       NSE >= 5.5 ~ "Alto"))
+                       NSE < 4.36 ~ "I",
+                       NSE >= 4.36 & NSE < 5.44 ~ "II",
+                       NSE >= 5.44 & NSE < 6.52 ~ "III",
+                       NSE >= 6.52 ~ "IV"))
 
 # 2.11 Transformamos em Factor
 glimpse(dados_reg)
@@ -162,6 +163,8 @@ levels(dados_reg$faixasNSE) # Alta = categoria de referência
 levels(dados_reg$categoria) # Privada = categoria de referência
 levels(dados_reg$sexo)      # Masculino = categoria de referência
 dados_reg$sexo <- relevel(dados_reg$sexo, ref="Masculino")
+levels(dados_reg$faixasNSE)
+dados_reg$faixasNSE <- relevel(dados_reg$faixasNSE, ref="IV")
 
 ######## PASSO 5. Checagem dos pressupostos ########
 
@@ -295,20 +298,22 @@ reg_raça <- ggplot(dados_prev_long, aes(x= NSE, y = Probabilidades, color = ra�
 plot(reg_raça)
 
 reg_mãe <- ggplot(dados_prev_long, aes(x= NSE, y = Probabilidades, color = mãe))+
-  geom_smooth(method="gam")+
+  geom_smooth(method="gam", linewidth=0.8)+
   labs(x = "Escore socioeconômico")+
   scale_y_continuous(labels = scales::percent_format(decimal.mark = ","))+
   facet_grid(Expectativa ~ .)+
   theme_bw()+
+  scale_color_discrete(breaks=c("Superior+", 'Médio+', 'Fund+', 'Fund-'))+
   guides(color = guide_legend(override.aes = list(fill = NA)))
 plot(reg_mãe)
 
 reg_nse <- ggplot(dados_prev_long, aes(x= NSE, y = Probabilidades, color = faixasNSE))+
-  geom_smooth(method="gam", linewidth=0.5)+
+  geom_smooth(method="gam", linewidth=0.8)+
   labs(x = "Escore socioeconômico")+
   scale_y_continuous(labels = scales::percent_format(decimal.mark = ","))+
   facet_grid(Expectativa ~ .)+
   theme_bw()+
+  scale_color_discrete(breaks=c("IV", 'III', 'II', 'I'))+
   guides(color = guide_legend(override.aes = list(fill = NA)))
 plot(reg_nse)
 
