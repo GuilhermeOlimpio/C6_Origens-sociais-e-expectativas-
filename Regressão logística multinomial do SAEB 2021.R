@@ -282,7 +282,10 @@ plot(reg_categoria)
 reg_sexo <- ggplot(dados_prev_long, aes(x= NSE, y = Probabilidades, color = sexo))+
   geom_smooth(method="gam")+
   labs(x = "Escore socioeconômico")+
-  scale_y_continuous(labels = scales::percent_format(decimal.mark = ","))+
+  scale_y_continuous(
+    labels = scales::percent_format(decimal.mark = ","),
+    breaks = seq(0, 1, by = 0.2)  # Set breaks at 0%, 20%, 40%, 60%, 80%, 100%
+  ) +
   facet_grid(Expectativa ~ .)+
   theme_bw()+
   guides(color = guide_legend(override.aes = list(fill = NA)))
@@ -340,7 +343,10 @@ plot(reg_categoria2)
 reg_sexo2 <- ggplot(dados_prev_long2, aes(x= NSE, y = Probabilidades, color = sexo))+
   geom_smooth(method="gam")+
   labs(x = "Escore socioeconômico")+
-  scale_y_continuous(labels = scales::percent_format(decimal.mark = ","))+
+  scale_y_continuous(
+    labels = scales::percent_format(decimal.mark = ","),
+    breaks = seq(0, 1, by = 0.2)  # Set breaks at 0%, 20%, 40%, 60%, 80%, 100%
+  ) +
   facet_grid(Expectativa ~ .)+
   theme_bw()+
   guides(color = guide_legend(override.aes = list(fill = NA)))
